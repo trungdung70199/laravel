@@ -63,7 +63,7 @@ class ItemController extends Controller
             'item' => $item,
         ];
 
-        // resouces/views/item/show.blade.php
+        // resources/views/item/show.blade.php
         // データ受け渡し
         return view('item.show', $data);
     }
