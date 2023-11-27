@@ -49,16 +49,12 @@ class ItemController extends Controller
     public function show(int $id)
     {
         //TODO: MySQLデータベースから取得
-        //商品データ(Test Data)
-        $items = [
-            1 => "コーヒー",
-            2 => "紅茶",
-            3 => "ほうじ茶",
-        ];
+        // SELECT * FROM items WHERE id = xx;
+        $item = Item::find($id);
 
-        $item = "";
-        if ($id > 0 && in_array($id, array_Keys($items))) {
-            $item = $items[$id];
+        //商品がなければ、商品トップページにリダイレクト 
+        if (!$item) {
+            return redirect(route('item.index'));
         }
 
         // Viewに受け渡すデータを作成
@@ -67,7 +63,7 @@ class ItemController extends Controller
             'item' => $item,
         ];
 
-        // resources/views/item/show.blade.php
+        // resouces/views/item/show.blade.php
         // データ受け渡し
         return view('item.show', $data);
     }
