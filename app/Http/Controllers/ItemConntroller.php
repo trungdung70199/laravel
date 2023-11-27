@@ -73,9 +73,9 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
-        $data = [];
-
-        // resouces/views/item/edit.blade.php
+        $item = Item::find($id);
+        if (!$item) return redirect(route('item.index'));
+        $data = ['item' => $item];
         return view('item.edit', $data);
     }
 
@@ -84,7 +84,15 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // dd($id);
+        $data = $request->all();
+        //Tokenを削除
+        unset($data['_token']);
+        // UPDATE items SET xxx = xxx, ... WHERE id = xx;
+        Item::where('id', $id)->update($data);
+
+        //編集画面にリダイレクト
+        return redirect(route('item.edit', $id));
     }
 
     /**
