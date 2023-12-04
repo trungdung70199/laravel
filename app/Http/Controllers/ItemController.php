@@ -12,15 +12,22 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        if ($item_name = @$request->item_name) {
-            //SELECT * FROM items WHERE name = 'xxxx';
-            $items = Item::where('name', $item_name)->get();
+        $order_column = ($request->order_column) ? $request->order_column : 'id';
+        $order_value = ($request->order_value) ? $request->order_value : 'asc';
+        if ($item_name = $request->item_name) {
+            //SELECT * FROM items WHERE name LIKE '%xxxx%' ORDER BY XXX;
+            $items = Item::where('name', 'LIKE', "%{$item_name}%")
+                ->orderBy($order_column, $order_value)
+                ->get();
         } else {
             //SELECT * FROM items;
-            $items = Item::get();
+            $items = Item::orderBy($order_column, $order_value)->get();
         }
 
-        $data = ['items' => $items];
+        $data = [
+            'items' => $items,
+            'item_name' => $item_name,
+        ];
         // resources/views/item/index.blade.php に受け渡して表示
         return view('item.index', $data);
     }
